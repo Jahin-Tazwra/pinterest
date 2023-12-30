@@ -1,12 +1,20 @@
 <%- include('partials/header.ejs') %>
 <div class="profile w-full min-h-screen text-white bg-zinc-800 pt-20 px-8">
+  <form method="post" action="/fileupload" hidden id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="image" id="uploadInput">
+  </form>
   <div class="profdets flex flex-col items-center">
-    <div class="w-32 h-32 bg-zinc-200 rounded-full overflow-hidden">
-      <img
-        src="https://images.unsplash.com/photo-1580923368248-877f237696cd?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt=""
-        class="w-full h-full object-cover"
-      />
+    <div class="relative">
+      <span id="uploadIcon" class="absolute w-8 h-8 bottom-0 right-0 rounded-full flex justify-center items-center bg-zinc-200 cursor-pointer">
+        <i class="ri-pencil-fill text-zinc-800"></i>
+      </span>
+      <div class="w-32 h-32 bg-zinc-200 rounded-full overflow-hidden">
+        <img
+          src="images/uploads/<%= user.profileImage ? user.profileImage : "default.png" %>"
+          alt=""
+          class="w-full h-full object-cover"
+        />
+      </div>
     </div>
     <h1 class="text-3xl font-semibold mt-5">Jahin Tazwar</h1>
     <h3 class="text-md">@tagname</h3>
@@ -15,6 +23,7 @@
       class="px-7 py-2 bg-zinc-700 rounded-full text-xs font-semibold mt-5"
       >Edit</a
     >
+    <button class="px-5 py-2 rounded-lg mt-3 bg-red-700">Add New Post</button>
   </div>
 
   <div class="cards flex flex-wrap space-x-8">
@@ -30,4 +39,14 @@
     </div>
   </div>
 </div>
+
+<script>
+  uploadIcon.addEventListener("click", function(){
+    uploadInput.click();
+  })
+
+  uploadInput.addEventListener("change", ()=>{
+    uploadForm.submit();
+  })
+</script>
 <%- include('partials/footer.ejs') %>

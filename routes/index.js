@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const userModel = require('./users');
 const passport = require('passport');
-const localStrategy = require("passport-local");
 
+const userModel = require('./users'); 
+const localStrategy = require("passport-local");
 passport.use(new localStrategy(userModel.authenticate()))
 
+const upload = require("./multer")
 /* GET home page. */
 router.get('/', isNotLoggedin, function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -43,7 +44,15 @@ router.get("/logout", isLoggedin, (req, res, next)=>{
 })
 
 router.get("/profile", isLoggedin, (req, res)=>{
-  res.render("profile");
+  res.render("profile", {user: req.user});
+})
+
+router.post("/fileupload", isLoggedin, upload.single("image"), async (req, res)=>{
+  const user = await userModel.findOne({username: req.user.username});
+  user.profileImage = req.file.filename;
+
+  await user.save();
+  res.redirect("/profile");
 })
 
 function isLoggedin(req, res, next){
